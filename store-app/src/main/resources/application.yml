@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/${store.db}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:root}
+    password: ${DB_PASS:}
+  jpa:
+    hibernate.ddl-auto: update
+    open-in-view: false
+cacheflow:
+  webhook-url: ${CACHEFLOW_URL:http://localhost:8080}/api/webhook/price-changed

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${storeName} + ' – ' + ${title}">Store</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 820px; margin: 2rem auto; color: #222; padding: 0 1rem; }
+    nav a { margin-right: .8rem; color: #555; text-decoration: none; }
+    nav a.active { color: #000; font-weight: 700; border-bottom: 2px solid #000; }
+    ul { list-style: none; padding: 0; }
+    .product-item { display: flex; align-items: center; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid #eee; }
+    .product-title { flex: 1; }
+    .product-price { width: 110px; text-align: right; font-weight: 600; }
+    form { display: flex; gap: .3rem; }
+    input { width: 100px; padding: .25rem; }
+  </style>
+</head>
+<body>
+<h1 th:text="${storeName}">Store</h1>
+<nav>
+  <a th:each="c : ${categories}" th:href="@{/category/{c}(c=${c})}" th:text="${c}" th:classappend="${c == current} ? 'active'"></a>
+  <a th:href="@{/all}" th:classappend="${current == 'all'} ? 'active'">All</a>
+</nav>
+<h2 th:text="${title}"></h2>
+<ul>
+  <li class="product-item" th:each="p : ${products}" th:attr="data-sku=${p.sku},data-category=${p.category}">
+    <span class="product-title" th:text="${p.name}"></span>
+    <span class="product-price" th:attr="data-price=${p.price}"
+          th:text="'₹' + ${#numbers.formatDecimal(p.price, 1, 'COMMA', 0, 'POINT')}"></span>
+    <form method="post" th:action="@{/products/{sku}/price(sku=${p.sku})}">
+      <input type="number" name="price" min="1" step="1" required th:placeholder="${#numbers.formatDecimal(p.price,1,0)}">
+      <button type="submit">Update</button>
+    </form>
+  </li>
+</ul>
+</body>
+</html>

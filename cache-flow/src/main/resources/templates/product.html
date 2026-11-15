@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><title th:text="${row.name} + ' – Cache Flow'">Product</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+<header>
+  <h1><a href="/">Cache Flow</a></h1>
+  <span class="tag" th:text="${row.category} + ' · ' + ${row.sku}"></span>
+</header>
+<main th:attr="data-sku=${row.sku}" id="main">
+  <a href="/">← Back to comparison</a>
+  <h2 th:text="${row.name}"></h2>
+  <div class="cards">
+    <div class="card" id="cardA" th:classappend="${row.best == 'Store A'} ? 'best'">
+      <div class="muted">Store A</div><div class="big" id="priceA">—</div></div>
+    <div class="card" id="cardB" th:classappend="${row.best == 'Store B'} ? 'best'">
+      <div class="muted">Store B</div><div class="big" id="priceB">—</div></div>
+    <div class="card"><div class="muted">Best Option to Buy</div><div class="big" id="best" th:text="${row.best}"></div>
+      <div class="muted" id="diff"></div></div>
+  </div>
+  <div class="chart-box"><canvas id="chart" height="110"></canvas></div>
+  <p class="muted">6-month price history. New points are appended automatically when prices change.</p>
+</main>
+<script>
+const sku = document.getElementById('main').dataset.sku;
+const inr = v => v == null ? '—' : '₹' + Math.round(v).toLocaleString('en-IN');
+const toPoints = arr => arr.map(p => ({x: new Date(p.t), y: Number(p.price)}));
+const chart = new Chart(document.getElementById('chart'), {
+  type: 'line',
+  data: { datasets: [
+    { label: 'Store A', data: [], stepped: true, borderColor: '#2563eb', pointRadius: 0, borderWidth: 2 },
+    { label: 'Store B', data: [], stepped: true, borderColor: '#ea580c', pointRadius: 0, borderWidth: 2 } ] },
+  options: { interaction: { mode: 'nearest', axis: 'x', intersect: false },
+    scales: { x: { type: 'time', time: { unit: 'week' } }, y: { ticks: { callback: v => inr(v) } } },
+    plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${inr(c.parsed.y)}` } } } }
+});
+async function load() {
+  const [h, c] = await Promise.all([fetch('/api/history/' + sku).then(r => r.json()),
+                                    fetch('/api/comparison').then(r => r.json())]);
+  const now = new Date();
+  // extend each line to "now" so the latest price is visible as a flat segment
+  [h.A, h.B].forEach((arr, i) => {
+    const pts = toPoints(arr);
+    if (pts.length) pts.push({x: now, y: pts[pts.length - 1].y});
+    chart.data.datasets[i].data = pts;
+  });
+  chart.update('none');
+  const r = c.rows.find(x => x.sku === sku);
+  if (r) {
+    document.getElementById('priceA').textContent = inr(r.storeA);
+    document.getElementById('priceB').textContent = inr(r.storeB);
+    document.getElementById('best').textContent = r.best;
+    document.getElementById('diff').textContent = r.difference != null ? `Save ${inr(r.difference)} (${r.differencePct}%)` : '';
+    document.getElementById('cardA').classList.toggle('best', r.best === 'Store A');
+    document.getElementById('cardB').classList.toggle('best', r.best === 'Store B');
+  }
+}
+load(); setInterval(load, 5000);
+</script>
+</body>
+</html>

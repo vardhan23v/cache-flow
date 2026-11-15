@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #f6f7f9; color: #1d2330; }
+header { background: #12263a; color: #fff; padding: 1rem 2rem; display: flex; align-items: center; gap: 1.5rem; }
+header h1 { margin: 0; font-size: 1.5rem; } header h1 a { color: #fff; text-decoration: none; }
+header .tag { opacity: .7; font-size: .9rem; flex: 1; }
+main { max-width: 1150px; margin: 1.5rem auto; padding: 0 1rem; }
+.toolbar { display: flex; gap: .7rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.toolbar input, .toolbar select { padding: .5rem .7rem; border: 1px solid #ccd; border-radius: 6px; font-size: .95rem; }
+.toolbar input { flex: 1; min-width: 220px; }
+button, .btn { background: #1f7a4d; color: #fff; border: 0; border-radius: 6px; padding: .55rem 1rem; cursor: pointer; font-size: .95rem; }
+.muted { color: #6b7280; font-size: .85rem; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px #0001; }
+th, td { padding: .6rem .8rem; text-align: left; border-bottom: 1px solid #eef0f3; font-size: .92rem; }
+th { background: #eef1f5; font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+td.cheapest { color: #1f7a4d; font-weight: 700; background: #eafaf1; }
+.badge { display: inline-block; padding: .2rem .55rem; border-radius: 999px; font-size: .78rem; font-weight: 600; background: #1f7a4d; color: #fff; }
+.badge.tie { background: #6b7280; }
+a { color: #1d4ed8; text-decoration: none; }
+.flash { animation: flash 1.5s; } @keyframes flash { from { background: #fff3b0; } to { background: inherit; } }
+.cards { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+.card { background: #fff; border-radius: 8px; padding: 1rem 1.3rem; box-shadow: 0 1px 3px #0001; min-width: 200px; }
+.card.best { outline: 2px solid #1f7a4d; }
+.card .big { font-size: 1.6rem; font-weight: 700; }
+.chart-box { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px #0001; }

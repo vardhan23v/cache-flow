@@ -1,0 +1,2 @@
+server.port: 8081
+store: { code: A, name: "Store A", db: store_a_db, price-seed: 1001, price-ending: 99 }

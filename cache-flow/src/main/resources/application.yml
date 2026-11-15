@@ -1,0 +1,15 @@
+server.port: ${PORT:8080}
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/cache_flow_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: ${DB_USER:root}
+    password: ${DB_PASS:}
+  jpa:
+    hibernate.ddl-auto: update
+    open-in-view: false
+    properties.hibernate.jdbc.batch_size: 500
+stores:
+  a-url: ${STORE_A_URL:http://localhost:8081}
+  b-url: ${STORE_B_URL:http://localhost:8082}
+scrape:
+  interval-ms: 60000
